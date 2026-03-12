@@ -13,6 +13,10 @@ docker_build() {
     docker build -t docker.io/reanahub/reana-auth-rucio .
 }
 
+format_prettier() {
+    prettier -c .
+}
+
 format_shfmt() {
     shfmt -d .
 }
@@ -73,6 +77,7 @@ lint_yamllint() {
 
 all() {
     docker_build
+    format_prettier
     format_shfmt
     lint_commitlint
     lint_hadolint
@@ -86,6 +91,7 @@ help() {
     echo "Options:"
     echo "  --all                Perform all checks [default]"
     echo "  --docker-build       Check Docker build"
+    echo "  --format-prettier    Check formatting of Markdown etc files"
     echo "  --format-shfmt       Check formatting of shell scripts"
     echo "  --help               Display this help message"
     echo "  --lint-commitlint    Check linting of commit messages"
@@ -105,6 +111,7 @@ case $arg in
 --all) all ;;
 --help) help ;;
 --docker-build) docker_build ;;
+--format-prettier) format_prettier ;;
 --format-shfmt) format_shfmt ;;
 --lint-commitlint) lint_commitlint "$@" ;;
 --lint-hadolint) lint_hadolint ;;
