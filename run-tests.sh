@@ -13,6 +13,10 @@ docker_build() {
     docker build -t docker.io/reanahub/reana-auth-rucio .
 }
 
+format_shfmt() {
+    shfmt -d .
+}
+
 lint_commitlint() {
     from=${2:-master}
     to=${3:-HEAD}
@@ -52,7 +56,7 @@ lint_commitlint() {
 }
 
 lint_hadolint() {
-    docker run -i --rm docker.io/hadolint/hadolint:v2.12.0 < Dockerfile
+    docker run -i --rm docker.io/hadolint/hadolint:v2.12.0 <Dockerfile
 }
 
 lint_shellcheck() {
@@ -65,6 +69,7 @@ lint_yamllint() {
 
 all() {
     docker_build
+    format_shfmt
     lint_commitlint
     lint_hadolint
     lint_shellcheck
@@ -76,6 +81,7 @@ help() {
     echo "Options:"
     echo "  --all              Perform all checks [default]"
     echo "  --docker-build     Check Docker build"
+    echo "  --format-shfmt     Check formatting of shell scripts"
     echo "  --help             Display this help message"
     echo "  --lint-commitlint  Check linting of commit messages"
     echo "  --lint-hadolint    Check linting of Dockerfiles"
@@ -93,6 +99,7 @@ case $arg in
 --all) all ;;
 --help) help ;;
 --docker-build) docker_build ;;
+--format-shfmt) format_shfmt ;;
 --lint-commitlint) lint_commitlint "$@" ;;
 --lint-hadolint) lint_hadolint ;;
 --lint-shellcheck) lint_shellcheck ;;
